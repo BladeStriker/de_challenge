@@ -50,3 +50,10 @@ de_challenge/
 - Contains tests for the main functionality using pytest.
 5. pyproject.toml
 - Defines the project dependencies and configuration for Poetry.
+
+
+## GitHub Actions 
+1. Used it to create a simple workflow, defined as follows.
+2. Configured action_test.yml through github interface of github actions.
+3. It allows to check build pass/fail on merge/push of code to main branch from feature branch.
+4. Workflow consists of a single job called "build" that executes on an ubuntu-latest runner. The job includes steps to check out the repository, set up Python 3.11, install project dependencies using Poetry, and run tests using pytest.
