@@ -1,0 +1,31 @@
+queries:
+  create_ratings_table: |
+    CREATE TABLE IF NOT EXISTS Ratings(
+        timestamp DATE,
+        user_id INT,
+        product_id INT,
+        rating INT
+    )
+  insert_rating: |
+    INSERT INTO Ratings (timestamp, user_id, product_id, rating) VALUES ('{}', {}, {}, {})
+  create_ratings_monthly_aggregates_table: |
+    CREATE TABLE IF NOT EXISTS RatingsMonthlyAggregates(
+        month TEXT,
+        product_id INT,
+        average_rating REAL
+    )
+  insert_ratings_monthly_aggregates: |
+    INSERT INTO RatingsMonthlyAggregates (month, product_id, average_rating)
+    SELECT strftime('%Y-%m', timestamp) AS month, product_id, AVG(rating)
+    FROM Ratings
+    GROUP BY month, product_id
+  find_top_prod: |
+    WITH RankedProducts AS (
+        SELECT month, product_id, average_rating,
+               ROW_NUMBER() OVER (PARTITION BY month ORDER BY average_rating DESC) AS rank
+        FROM RatingsMonthlyAggregates
+    )
+    SELECT month, product_id, average_rating
+    FROM RankedProducts
+    WHERE rank <= 3
+    ORDER BY month, rank
