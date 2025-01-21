@@ -9,6 +9,7 @@ def db():
     yield conn
     conn.close()
 
+# Test the gen_ratings function
 def test_gen_ratings(db):
     gen_ratings(db)
     cur = db.cursor()
@@ -16,6 +17,7 @@ def test_gen_ratings(db):
     count = cur.fetchone()[0]
     assert count == 100000
 
+# Test the comp_monthly_agg function
 def test_comp_monthly_agg(db):
     gen_ratings(db)
     comp_monthly_agg(db)
@@ -24,6 +26,7 @@ def test_comp_monthly_agg(db):
     count = cur.fetchone()[0]
     assert count > 0
 
+# Test the find_top_prod function
 def test_find_top_prod(db):
     gen_ratings(db)
     comp_monthly_agg(db)
